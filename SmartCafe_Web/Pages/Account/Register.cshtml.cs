@@ -10,7 +10,7 @@ namespace SmartCafe_Web.Pages.Account
         public Registration NewUser { get; set; } = new Registration();
         public void OnGet()
         {
-            NewUser.FirstName = "John";
+            NewUser.FirstName = "";
         }
 
         // When we submit the form, we POST to the server?

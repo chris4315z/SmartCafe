@@ -2,56 +2,54 @@
 @model SmartCafe_Web.Pages.Account.RegisterModel
 @{
 }
-<!-- Register page html & bootstrap -->
-<div class="row">
-    <div class="col-12">
-        <label class="fs-1">Register</label>
-    </div>
-</div>
-<form method="post">
-    <div class="row">
-        <div class="col-4">
-            <label asp-for="NewUser.FirstName" class="form-label"></label>
-        </div>
-        <div class="col-12">
-            <input asp-for="NewUser.FirstName" type="text" class="form-control" />
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-4">
-            <label asp-for="NewUser.LastName" class="form-label"></label>
-        </div>
-        <div class="col-12">
-            <input asp-for="NewUser.LastName" type="text" class="form-control" />
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-4">
-            <label asp-for="NewUser.Email" class="form-label"></label>
-        </div>
-        <div class="col-12">
-            <input asp-for="NewUser.Email" type="email" class="form-control" />
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-4">
-            <label asp-for="NewUser.Password" class="form-label"></label>
-        </div>
-        <div class="col-12">
-            <input asp-for="NewUser.Password" type="password" class="form-control" />
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-4">
-            <label asp-for="NewUser.ConfirmPassword" class="form-label"></label>
-        </div>
-        <div class="col-12">
-            <input asp-for="NewUser.ConfirmPassword" type="password" class="form-control" />
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <button type="submit" class="form-control btn btn-primary">Register</button>
+
+<body style="background-color: burlywood; min-height: 100vh; display: flex; flex-direction: column;">
+    <!-- Centered Register Form -->
+    <div class="flex-grow-1 d-flex justify-content-center align-items-center">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                    <div class="text-center mb-4">
+                        <label class="fs-1 fst-italic">Register</label>
+                    </div>
+                    <form method="post" class="p-4 bg-light rounded shadow">
+                        <!-- First Name -->
+                        <div class="mb-3">
+                            <label asp-for="NewUser.FirstName" class="form-label fw-bold"></label>
+                            <input asp-for="NewUser.FirstName" type="text" class="form-control" />
+                        </div>
+                        <!-- Last Name -->
+                        <div class="mb-3">
+                            <label asp-for="NewUser.LastName" class="form-label fw-bold"></label>
+                            <input asp-for="NewUser.LastName" type="text" class="form-control" />
+                        </div>
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label asp-for="NewUser.Email" class="form-label fw-bold"></label>
+                            <input asp-for="NewUser.Email" type="email" class="form-control" />
+                        </div>
+                        <!-- Username -->
+                        <div class="mb-3">
+                            <label asp-for="NewUser.Username" class="form-label fw-bold"></label>
+                            <input asp-for="NewUser.Username" type="text" class="form-control" />
+                        </div>
+                        <!-- Password -->
+                        <div class="mb-3">
+                            <label asp-for="NewUser.Password" class="form-label fw-bold"></label>
+                            <input asp-for="NewUser.Password" type="password" class="form-control" />
+                        </div>
+                        <!-- Confirm Password -->
+                        <div class="mb-3">
+                            <label asp-for="NewUser.ConfirmPassword" class="form-label fw-bold"></label>
+                            <input asp-for="NewUser.ConfirmPassword" type="password" class="form-control" />
+                        </div>
+                        <!-- Sign-Up button -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary" style="background-color: sienna; border: none;">Sign-Up</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
-</form>
+</body>
