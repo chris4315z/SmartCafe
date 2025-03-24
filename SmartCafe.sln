@@ -4,6 +4,8 @@ VisualStudioVersion = 17.13.35806.99
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCafe_Web", "SmartCafe_Web\SmartCafe_Web.csproj", "{DE572C59-83BE-472F-8FA6-13B82A25A6ED}"
 EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "SmartCafe_DB", "SmartCafe_DB\SmartCafe_DB.sqlproj", "{99009A90-9C9B-4358-8EDB-3A8566EF373D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -14,6 +16,12 @@ Global
 		{DE572C59-83BE-472F-8FA6-13B82A25A6ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE572C59-83BE-472F-8FA6-13B82A25A6ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE572C59-83BE-472F-8FA6-13B82A25A6ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99009A90-9C9B-4358-8EDB-3A8566EF373D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99009A90-9C9B-4358-8EDB-3A8566EF373D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99009A90-9C9B-4358-8EDB-3A8566EF373D}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{99009A90-9C9B-4358-8EDB-3A8566EF373D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99009A90-9C9B-4358-8EDB-3A8566EF373D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99009A90-9C9B-4358-8EDB-3A8566EF373D}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
