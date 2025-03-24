@@ -6,6 +6,7 @@ namespace SmartCafe_Web.Pages.Account
 {
     public class RegisterModel : PageModel
     {
+        // Get and post registration page information?
         public Registration NewUser { get; set; } = new Registration();
         public void OnGet()
         {
