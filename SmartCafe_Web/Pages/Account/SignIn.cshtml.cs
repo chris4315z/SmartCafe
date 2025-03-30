@@ -9,7 +9,7 @@ namespace SmartCafe_Web.Pages.Account
     public class SigninModel : PageModel
     {
         [BindProperty]
-        public Login LoginUser { get; set; }
+        public Signin SigninUser { get; set; }
         public void OnGet()
         {
         }
@@ -26,14 +26,14 @@ namespace SmartCafe_Web.Pages.Account
                 {
                     string cmdText = "SELECT UserID, UserPassword FROM [User] WHERE UserEmail = @email";
                     SqlCommand cmd = new SqlCommand(cmdText, conn);
-                    cmd.Parameters.AddWithValue("@email", LoginUser.Email);
+                    cmd.Parameters.AddWithValue("@email", SigninUser.Email);
                     conn.Open();
                     SqlDataReader reader = cmd.ExecuteReader();
                     if (reader.HasRows)
                     {
                         reader.Read();
                         string passwordHash = reader.GetString(1);
-                        if (AppHelper.VerifyPassword(LoginUser.Password, passwordHash))
+                        if (AppHelper.VerifyPassword(SigninUser.Password, passwordHash))
                         {
                             return RedirectToPage("/Account/Profile");
                         }
