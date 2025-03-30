@@ -4,6 +4,7 @@ namespace SmartCafe_Web.Model
 {
     public class Registration
     {
+        // Registration page code.
        
         [Display(Name = "First Name:")]
         [Required(ErrorMessage = "First Name is required")]
