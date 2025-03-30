@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Data.SqlClient;
 using SmartCafe_Web.Model;
-using SmartCafe_Business;
 
 namespace SmartCafe_Web.Pages.Account
 {
@@ -21,21 +20,26 @@ namespace SmartCafe_Web.Pages.Account
             if (ModelState.IsValid)
             {
                 // Save to Database
+                // 1. Create a connection to the database
+                string connectionString = "Server=(localdb)\\MSSQLLocalDB;Database=SmartCafe;Trusted_Connection=True;";
+                SqlConnection conn = new SqlConnection(connectionString);
+
+
+                // 2. Create a command to insert the data
                 using (SqlConnection conn = new SqlConnection(AppHelper.GetDBConnectionString()))
                 {
-                    // 2. Create a command to insert the data
-                    string cmdText = "INSERT INTO [User] (UserFirstName, UserLastName, UserProfileImage, UserEmail, UserPassword, AccountTypeID) VALUES (@FirstName, @LastName, @ProfileImage, @Email, @Password, 3)";
+                    string cmdText = "INSERT INTO [SystemUser] (SystemUserFirstName, SystemUserLastName, SystemUserProfilePicture, SystemUserEmailAddress, SystemUserPassword, AccountTypeID) VALUES (@FirstName, @LastName, @ProfilePicture, @Email, @Password, 2)";
                     SqlCommand cmd = new SqlCommand(cmdText, conn);
                     cmd.Parameters.AddWithValue("@FirstName", NewUser.FirstName);
                     cmd.Parameters.AddWithValue("@LastName", NewUser.LastName);
-                    cmd.Parameters.AddWithValue("@ProfileImage", "default.jpg");
+                    cmd.Parameters.AddWithValue("@ProfilePicture", "default.jpg");
                     cmd.Parameters.AddWithValue("@Email", NewUser.Email);
                     cmd.Parameters.AddWithValue("@Password", AppHelper.GeneratePasswordHash(NewUser.Password));
-                    // 3. Execute the command
+
+                    // 3. Open the connection and execute the command
                     conn.Open();
                     cmd.ExecuteNonQuery();
                 }
-
                 // Redirect to Login Page
                 return RedirectToPage("/Account/Signin");
             }

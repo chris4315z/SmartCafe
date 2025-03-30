@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Data.SqlClient;
-using SmartCafe_Web_Business;
 using SmartCafe_Web.Model;
 
 namespace SmartCafe_Web.Pages.Account
@@ -16,6 +15,7 @@ namespace SmartCafe_Web.Pages.Account
 
         public IActionResult OnPost()
         {
+            /*
             if (ModelState.IsValid)
             {
                 // Validate User Input
@@ -54,6 +54,8 @@ namespace SmartCafe_Web.Pages.Account
             {
                 return Page();
             }
+            */
+            return Page();
         }
     }
 }
