@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Data.SqlClient;
 using SmartCafe_Web.Model;
+using SmartCafe_Business;
 
 namespace SmartCafe_Web.Pages.Account
 {
@@ -21,8 +22,8 @@ namespace SmartCafe_Web.Pages.Account
             {
                 // Save to Database
                 // 1. Create a connection to the database
-                string connectionString = "Server=(localdb)\\MSSQLLocalDB;Database=SmartCafe;Trusted_Connection=True;";
-                SqlConnection conn = new SqlConnection(connectionString);
+                // string connectionString = "Server=(localdb)\\MSSQLLocalDB;Database=SmartCafe;Trusted_Connection=True;";
+                // SqlConnection conn = new SqlConnection(connectionString);
 
 
                 // 2. Create a command to insert the data
