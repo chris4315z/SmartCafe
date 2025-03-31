@@ -13,10 +13,17 @@ namespace SmartCafe_Business
             return "Server=(localdb)\\MSSQLLocalDB;Database=SmartCafe;Trusted_Connection=True;";
         }
 
+        // Hash password so we dont store it as plain text in database.
         public static string GeneratePasswordHash(string password)
         {
             string passwordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(password);
             return passwordHash;
+        }
+
+        // Verify user logging in put the right password
+        public static bool VerifyPassword(string password, string passwordHash)
+        {
+            return BCrypt.Net.BCrypt.EnhancedVerify(password, passwordHash);
         }
     }
 }
