@@ -29,11 +29,12 @@ namespace SmartCafe_Web.Pages.Account
                 // 2. Create a command to insert the data
                 using (SqlConnection conn = new SqlConnection(AppHelper.GetDBConnectionString()))
                 {
-                    string cmdText = "INSERT INTO [SystemUser] (SystemUserFirstName, SystemUserLastName, SystemUserProfilePicture, SystemUserEmailAddress, SystemUserPassword, AccountTypeID) VALUES (@FirstName, @LastName, @ProfilePicture, @Email, @Password, 2)";
+                    string cmdText = "INSERT INTO [SystemUser] (SystemUserFirstName, SystemUserLastName, SystemUserProfilePicture, SystemUsername, SystemUserEmailAddress, SystemUserPassword, AccountTypeID) VALUES (@FirstName, @LastName, @ProfilePicture, @Username, @Email, @Password, 2)";
                     SqlCommand cmd = new SqlCommand(cmdText, conn);
                     cmd.Parameters.AddWithValue("@FirstName", NewUser.FirstName);
                     cmd.Parameters.AddWithValue("@LastName", NewUser.LastName);
                     cmd.Parameters.AddWithValue("@ProfilePicture", "default.jpg");
+                    cmd.Parameters.AddWithValue("@Username", NewUser.Username);
                     cmd.Parameters.AddWithValue("@Email", NewUser.Email);
                     cmd.Parameters.AddWithValue("@Password", AppHelper.GeneratePasswordHash(NewUser.Password));
 

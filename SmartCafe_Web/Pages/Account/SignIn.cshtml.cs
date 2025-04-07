@@ -1,8 +1,11 @@
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Data.SqlClient;
-using SmartCafe_Web.Model;
 using SmartCafe_Business;
+using SmartCafe_Web.Model;
+using System.Security.Claims;
 
 namespace SmartCafe_Web.Pages.Account
 {
@@ -24,25 +27,46 @@ namespace SmartCafe_Web.Pages.Account
                 // If the user does not exist, display an error message
                 using (SqlConnection conn = new SqlConnection(AppHelper.GetDBConnectionString()))
                 {
-                    // Try to connect to the database and see if select statement returns anything
-                    string cmdText = "SELECT SystemUserID, SystemUserPassword FROM [SystemUser] WHERE SystemUserEmail = @email";
+                    string cmdText = "SELECT UserID, UserPassword, UserFirstName, AccountTypeName" +
+                        " FROM [User] INNER JOIN AccountType" +
+                        " ON [User].AccountTypeID = AccountType.AccountTypeID WHERE UserEmail = @email";
                     SqlCommand cmd = new SqlCommand(cmdText, conn);
                     cmd.Parameters.AddWithValue("@email", SigninUser.Email);
                     conn.Open();
                     SqlDataReader reader = cmd.ExecuteReader();
-                    // if user exists in the database, aka database returns it
                     if (reader.HasRows)
                     {
-                        // Grab the value
                         reader.Read();
-                        // GetString(1) gets the first value in a row, it's index so it starts with a 0, which would be SystemUserID
                         string passwordHash = reader.GetString(1);
-                        // Verify if the password they put is the right password
                         if (AppHelper.VerifyPassword(SigninUser.Password, passwordHash))
                         {
+                            // create a email claim
+                            Claim emailClaim = new Claim(ClaimTypes.Email, SigninUser.Email);
+                            // create a user id claim
+                            Claim userIdClaim = new Claim(ClaimTypes.NameIdentifier, reader.GetInt32(0).ToString());
+                            // create a name claim
+                            Claim nameClaim = new Claim(ClaimTypes.Name, reader.GetString(2));
+                            // create a role claim
+                            Claim roleClaim = new Claim(ClaimTypes.Role, reader.GetString(3));
+
+                            // create a list of claims
+                            List<Claim> claims = new List<Claim> { emailClaim, userIdClaim, nameClaim, roleClaim };
+
+                            // create a claims identity
+                            ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                            // create a claims principal
+                            ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+
+                            // sign in the user
+                            HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+                            // update user login time
+                            UpdateUserLoginTime(reader.GetInt32(0));
+
                             return RedirectToPage("/Account/Profile");
                         }
-                        else // User entered the wrong password.
+                        else
                         {
                             ModelState.AddModelError("SigninError", "Invalid credentials.");
                             return Page();
@@ -50,8 +74,7 @@ namespace SmartCafe_Web.Pages.Account
                     }
                     else
                     {
-                        // User doesn't exist in the database.
-                        ModelState.AddModelError("SigninError", "Invalid credentials.");
+                        ModelState.AddModelError("SignInError", "Invalid credentials.");
                         return Page();
                     }
                 }
@@ -59,6 +82,19 @@ namespace SmartCafe_Web.Pages.Account
             else
             {
                 return Page();
+            }
+        }
+
+        private void UpdateUserLoginTime(int v)
+        {
+            using (SqlConnection conn = new SqlConnection(AppHelper.GetDBConnectionString()))
+            {
+                string cmdText = "UPDATE [User] SET LastLoginTime = @loginTime WHERE UserID = @userId";
+                SqlCommand cmd = new SqlCommand(cmdText, conn);
+                cmd.Parameters.AddWithValue("@SignInTime", DateTime.Now);
+                cmd.Parameters.AddWithValue("@userId", v);
+                conn.Open();
+                cmd.ExecuteNonQuery();
             }
         }
     }

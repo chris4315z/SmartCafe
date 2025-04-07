@@ -2,38 +2,37 @@
 @model SmartCafe_Web.Pages.Account.SigninModel
 @{
 }
-<body>
-    <div class="row text-center">
+
+<div class="row text-center">
+    <div class="col-12">
+        <label class="form-label fs-1">Sign In</label>
+    </div>
+</div>
+
+<form method="post">
+    <div class="text-danger" asp-validation-summary="All"></div>
+    <div class="row my-2">
+        <div class="col-4">
+            <label asp-for="LoginUser.Email" class="form-label"></label>
+        </div>
         <div class="col-12">
-            <label class="form-label fs-1">Sign In</label>
+            <input asp-for="LoginUser.Email" type="email" class="form-control" />
+            <span asp-validation-for="LoginUser.Email" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row my-2">
+        <div class="col-4">
+            <label asp-for="LoginUser.Password" class="form-label"></label>
+        </div>
+        <div class="col-12">
+            <input asp-for="LoginUser.Password" type="password" class="form-control" />
+            <span asp-validation-for="LoginUser.Password" class="text-danger"></span>
         </div>
     </div>
 
-    <form method="post">
-        <div class="text-danger" asp-validation-summary="All"></div>
-        <div class="row my-2">
-            <div class="col-4">
-                <label asp-for="SigninUser.Email" class="form-label"></label>
-            </div>
-            <div class="col-12">
-                <input asp-for="SigninUser.Email" type="email" class="form-control" />
-                <span asp-validation-for="SigninUser.Email" class="text-danger"></span>
-            </div>
+    <div class="row my-2">
+        <div class="col-12">
+            <button type="submit" class="form-control btn btn-primary">Sign In</button>
         </div>
-        <div class="row my-2">
-            <div class="col-4">
-                <label asp-for="SigninUser.Password" class="form-label"></label>
-            </div>
-            <div class="col-12">
-                <input asp-for="SigninUser.Password" type="password" class="form-control" />
-                <span asp-validation-for="SigninUser.Password" class="text-danger"></span>
-            </div>
-        </div>
-
-        <div class="row my-2">
-            <div class="col-12">
-                <button type="submit" class="form-control btn btn-primary">Sign In</button>
-            </div>
-        </div>
-    </form>
-</body>
+    </div>
+</form>
