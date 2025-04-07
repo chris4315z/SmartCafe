@@ -21,10 +21,5 @@ namespace SmartCafe_Web.Model
 
         public int ItemTypeID { get; set; }
 
-
-
-
-
-
     }
 }
