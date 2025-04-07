@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Data.SqlClient;
 using SmartCafe_Business;
 using SmartCafe_Web.Model;
+using System.Diagnostics.Eventing.Reader;
 using System.Security.Claims;
 
 namespace SmartCafe_Web.Pages.Account
@@ -12,7 +13,7 @@ namespace SmartCafe_Web.Pages.Account
     public class SigninModel : PageModel
     {
         [BindProperty]
-        public Signin SigninUser { get; set; }
+        public Signin LoginUser { get; set; }
         public void OnGet()
         {
         }
@@ -27,21 +28,21 @@ namespace SmartCafe_Web.Pages.Account
                 // If the user does not exist, display an error message
                 using (SqlConnection conn = new SqlConnection(AppHelper.GetDBConnectionString()))
                 {
-                    string cmdText = "SELECT UserID, UserPassword, UserFirstName, AccountTypeName" +
-                        " FROM [User] INNER JOIN AccountType" +
-                        " ON [User].AccountTypeID = AccountType.AccountTypeID WHERE UserEmail = @email";
+                    string cmdText = "SELECT SystemUserID, SystemUserPassword, SystemUserFirstName, AccountTypeName" +
+                        " FROM [SystemUser] INNER JOIN AccountType" +
+                        " ON [SystemUser].AccountTypeID = AccountType.AccountTypeID WHERE SystemUserEmailAddress = @email";
                     SqlCommand cmd = new SqlCommand(cmdText, conn);
-                    cmd.Parameters.AddWithValue("@email", SigninUser.Email);
+                    cmd.Parameters.AddWithValue("@email", LoginUser.Email);
                     conn.Open();
                     SqlDataReader reader = cmd.ExecuteReader();
                     if (reader.HasRows)
                     {
                         reader.Read();
                         string passwordHash = reader.GetString(1);
-                        if (AppHelper.VerifyPassword(SigninUser.Password, passwordHash))
+                        if (AppHelper.VerifyPassword(LoginUser.Password, passwordHash))
                         {
                             // create a email claim
-                            Claim emailClaim = new Claim(ClaimTypes.Email, SigninUser.Email);
+                            Claim emailClaim = new Claim(ClaimTypes.Email, LoginUser.Email);
                             // create a user id claim
                             Claim userIdClaim = new Claim(ClaimTypes.NameIdentifier, reader.GetInt32(0).ToString());
                             // create a name claim
@@ -68,7 +69,7 @@ namespace SmartCafe_Web.Pages.Account
                         }
                         else
                         {
-                            ModelState.AddModelError("SigninError", "Invalid credentials.");
+                            ModelState.AddModelError("SignInError", "Invalid credentials.");
                             return Page();
                         }
                     }
@@ -89,10 +90,10 @@ namespace SmartCafe_Web.Pages.Account
         {
             using (SqlConnection conn = new SqlConnection(AppHelper.GetDBConnectionString()))
             {
-                string cmdText = "UPDATE [User] SET LastLoginTime = @loginTime WHERE UserID = @userId";
+                string cmdText = "UPDATE [SystemUser] SET LastLoginTime = @SignInTime WHERE SystemUserID = @UserID";
                 SqlCommand cmd = new SqlCommand(cmdText, conn);
                 cmd.Parameters.AddWithValue("@SignInTime", DateTime.Now);
-                cmd.Parameters.AddWithValue("@userId", v);
+                cmd.Parameters.AddWithValue("@UserID", v);
                 conn.Open();
                 cmd.ExecuteNonQuery();
             }
