@@ -18,11 +18,9 @@ namespace SmartCafe_Web.Pages.MenuItems
         {
             using (SqlConnection conn = new SqlConnection(AppHelper.GetDBConnectionString()))
             {
-                string cmdText = "SELECT i.ItemTypeID, i.ItemName, i.ItemImage, i.Price," +
-                    "t.ItemTypeName as ItemTypeID, n.IngredientName " +
-                    "FROM MenuItem i " +
+                string cmdText = "SELECT i.ItemTypeID, i.ItemName, i.ItemImage, i.Price FROM MenuItem i" +
                     "JOIN ItemType t ON i.ItemTypeID = t.ItemTypeID" +
-                    "JOIN Ingredients n ON "; //HELP"
+                    "WHERE  it.MenuItemID"; //HELP"
 
                 SqlCommand cmd = new SqlCommand(cmdText, conn);
                 conn.Open();

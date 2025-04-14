@@ -15,6 +15,7 @@ namespace SmartCafe_Web.Pages.MenuItems
     [BindProperties]
     public class AddMenuItemModel : PageModel
     {
+        private SelectListItem ingredients;
 
         public MenuItem NewItem { get; set; }
 
@@ -164,10 +165,11 @@ namespace SmartCafe_Web.Pages.MenuItems
                 {
                     while (reader.Read())
                     {
-                        var ingredient = new SelectListItem();
-                        ingredient.Value = reader["IngredientID"].ToString();
-                        ingredient.Text = reader["IngredientName"].ToString();
-                        Ingredients.Add(ingredient);
+                        var ingredient = new MenuItemInfo();
+                        ingredient.IngredientID = int.Parse(reader["IngredientID"].ToString());
+                        ingredient.IngredientName = reader["IngredientName"].ToString();
+                        ingredient.IsSelected = false;
+                        Ingredients.Add(ingredients);
                     }
                     var defaultIngredient = new SelectListItem();
                     defaultIngredient.Value = "0";
@@ -215,6 +217,10 @@ namespace SmartCafe_Web.Pages.MenuItems
         public string ItemName { get; set; }
 
         public bool IsSelected { get; set; }
+
+        public int IngredientID { get; set; }
+
+        public string IngredientName { get;set; }
 
     }
 }

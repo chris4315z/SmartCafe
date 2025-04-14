@@ -13,6 +13,7 @@ namespace SmartCafe_Web.Pages.MenuItems
     [BindProperties]
     public class EditMenuItemModel : PageModel
     {
+        private SelectListItem ingredients;
 
         public MenuItem CurrentItem { get; set; }
 
@@ -32,10 +33,8 @@ namespace SmartCafe_Web.Pages.MenuItems
         public void OnGet(int id)
         {
             PopulateMenuItemList();
-            PopulateMenuItemSizesList();
             PopulateItemTypeList();
             PopulateIngredientsList();
-            PopulateOrderItemsList();
             SelectedMenuItemIngredientsIDs = PopulateSelectedMenuItemIngredientsIDs(id);
 
         }
@@ -94,17 +93,17 @@ namespace SmartCafe_Web.Pages.MenuItems
                 {
                     while (reader.Read())
                     {
-                        var ingredients = new MenuItemInfo();
-                        ingredients.IngredientID = reader["IngredientID"].ToString();
-                        ingredients.IngredientName = reader["IngredientName"].ToString();
+                        var ingredient = new MenuItemInfo();
+                        ingredient.IngredientID = int.Parse(reader["IngredientID"].ToString());
+                        ingredient.IngredientName = reader["IngredientName"].ToString();
                         Ingredients.Add(ingredients);
-                        if (SelectedMenuItemIngredientsIDs.Contains(ingredients.IngredientID))
+                        if (SelectedMenuItemIngredientsIDs.Contains(ingredient.IngredientID))
                         {
-                            ingredients.IsSelected = true;
+                            ingredient.IsSelected = true;
                         }
                         else
                         {
-                            ingredients.IsSelected = false;
+                            ingredient.IsSelected = false;
                         }
                     }
                 }
