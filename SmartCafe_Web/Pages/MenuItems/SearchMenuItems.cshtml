@@ -1,0 +1,73 @@
+﻿@page
+@model SmartCafe_Web.Pages.MenuItems.SearchMenuItemsModel
+@{
+}
+<div class="row txt-center">
+    <div class="col-12">
+        <label class="form-label fs-1">Search Item</label>
+    </div>
+</div>
+<div class="row my-2">
+    <div class="col-2">
+        <a asp-page="AddItem" class="btn btn-primary">Add Item</a>
+    </div>
+</div>
+
+<form method="post">
+    @if (Model.Items.Count != 0)
+    {
+        @foreach (var item in @Model.Items)
+        {
+            <div class="row my-2">
+                <div class="col-2">
+                    <!-- left column -->
+                    <img src="@item.ItemImage" alt="Item Image" class="img-thumbnail" />
+                </div>
+                <div class="col-10">
+                    <!-- right column -->
+                    <div class="row my-2">
+                        <div class="col-4">
+                            <label class="form-label" asp-for="@item.ItemName"></label>
+                        </div>
+                        <div class="col-8">
+                            <label class="form-label">@item.ItemName</label>
+                        </div>
+                    </div>
+
+                    <div class="row my-2">
+                        <div class="col-4">
+                            <label class="form-label" asp-for="@item.ItemTypeID"></label>
+                        </div>
+                        <div class="col-8">
+                            <label class="form-label">@item.ItemTypeID</label>
+                        </div>
+                    </div>
+
+                    <div class="row my-2">
+                        <div class="col-4">
+                            <label class="form-label" asp-for="@item.Price"></label>
+                        </div>
+                        <div class="col-8">
+                            <label class="form-label">@item.Price</label>
+                        </div>
+                    </div>
+                    <div class="row my-2">
+                        <div class="col-12">
+                            <a asp-page="EditItem" asp-route-id="@item.ItemTypeID" class="btn btn-primary">Edit</a>
+                            <button onclick="return confirm('Are you sure?')" class="btn btn-danger" asp-route-id="@item.ItemTypeID" asp-page-handler="Delete">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr />
+        }
+    }
+    else
+    {
+        <div class="row my-2">
+            <div class="col-12">
+                <label class="form-label">No items yet. Click Add Item to add a new item.</label>
+            </div>
+        </div>
+    }
+</form>
