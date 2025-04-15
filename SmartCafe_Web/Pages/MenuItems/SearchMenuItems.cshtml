@@ -51,6 +51,25 @@
                             <label class="form-label">@item.Price</label>
                         </div>
                     </div>
+
+                    <div class="row my-2">
+                        <div class="col-4">
+                            <label class="form-label" asp-for="@item.MenuItemIngredients"></label>
+                        </div>
+                        <div class="col-8">
+                            <label class="form-label">@string.Join(", ", item.MenuItemIngredients)</label>
+                        </div>
+                    </div>
+
+                    <div class="row my-2">
+                        <div class="col-4">
+                            <label class="form-label" asp-for="@item.ItemTypeID"></label>
+                        </div>
+                        <div class="col-8">
+                            <label class="form-label">@item.ItemTypeID</label>
+                        </div>
+                    </div>
+
                     <div class="row my-2">
                         <div class="col-12">
                             <a asp-page="EditMenuItem" asp-route-id="@item.MenuItemID" class="btn btn-primary">Edit</a>
