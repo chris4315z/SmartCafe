@@ -24,6 +24,7 @@ namespace SmartCafe_Web.Model
 
         [Display(Name = "Password:")]
         [Required(ErrorMessage = "Password is required")]
+        [MinLength(10, ErrorMessage = "Password must be at least 10 characters long")]
         public string Password { get; set; }
 
         [Display(Name = "Confirm Password:")]
