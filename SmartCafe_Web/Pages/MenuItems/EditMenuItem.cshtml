@@ -39,6 +39,18 @@
             <span asp-validation-for="CurrentItem.ItemImage" class="text-danger"></span>
         </div>
     </div>
+    <div class="row my-2">
+        <div class="col-4">
+            <label class="form-label">Ingredients</label>
+        </div>
+        <div class="col-12">
+            @foreach (var n in Model.Ingredients)
+            {
+                <input type="checkbox" value="@n.IngredientID" class="form-check-input" name="SelectedMenuItemIngredientsIDs" checked="@n.IsSelected" />
+                <label class="form-label">@n.IngredientName</label>
+            }
+        </div>
+    </div>
 
 
 
@@ -46,7 +58,7 @@
 
     <div class="row my-2">
         <div class="col-12">
-            <button type="submit" class="form-control btn btn-primary">Add Item</button>
+            <button type="submit" class="form-control btn btn-primary">Edit Item</button>
         </div>
     </div>
 </form>

@@ -15,7 +15,7 @@ namespace SmartCafe_Web.Pages.MenuItems
     [BindProperties]
     public class AddMenuItemModel : PageModel
     {
-        private SelectListItem ingredients;
+        //private SelectListItem ingredients;
 
         public MenuItem NewItem { get; set; }
 
@@ -25,20 +25,19 @@ namespace SmartCafe_Web.Pages.MenuItems
 
         public List<SelectListItem> ItemType { get; set; } = new List<SelectListItem>();
 
-        public List<SelectListItem> Ingredients { get; set; } = new List<SelectListItem>();
+        public List<IngredientInfo> Ingredients { get; set; } = new List<IngredientInfo>();
 
         public List<SelectListItem> OrderItems { get; set; } = new List<SelectListItem>();
 
-        public List<MenuItemInfo> MenuItems { get; set; } = new List<MenuItemInfo>();
+        //public List<MenuItemInfo> MenuItems { get; set; } = new List<MenuItemInfo>();
 
         public List<int> SelectedMenuItemIngredientsIDs { get; set; } = new List<int>();
         public void OnGet()
         {
-            PopulateMenuItemList();
+            //PopulateMenuItemList();
             PopulateMenuItemSizesList();
             PopulateItemTypeList();
             PopulateIngredientsList();
-            PopulateOrderItemsList();
         }
 
         public IActionResult OnPost()
@@ -71,37 +70,15 @@ namespace SmartCafe_Web.Pages.MenuItems
             }
             else
             {
-                PopulateMenuItemList();
+                //PopulateMenuItemList();
                 PopulateMenuItemSizesList();
                 PopulateItemTypeList();
                 PopulateIngredientsList();
-                PopulateOrderItemsList();
                 return Page();
             }
             
         }
-
-        private void PopulateMenuItemList()
-        {
-            using (SqlConnection conn = new SqlConnection(AppHelper.GetDBConnectionString()))
-            {
-                string query = "SELECT MenuItemID, ItemName, ItemImage, Price, ItemTypeID FROM MenuItem";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                conn.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-                if (reader.HasRows)
-                {
-                    while (reader.Read())
-                    {
-                        var menuItem = new MenuItemInfo();
-                        menuItem.MenuItemID = int.Parse(reader["MenuItemID"].ToString());
-                        menuItem.ItemName = reader["ItemName"].ToString();
-                        menuItem.IsSelected = false;
-                        MenuItems.Add(menuItem);
-                    }
-                }
-            }
-        }
+        
 
         private void PopulateMenuItemSizesList()
         {
@@ -165,57 +142,19 @@ namespace SmartCafe_Web.Pages.MenuItems
                 {
                     while (reader.Read())
                     {
-                        var ingredient = new MenuItemInfo();
+                        var ingredient = new IngredientInfo();
                         ingredient.IngredientID = int.Parse(reader["IngredientID"].ToString());
                         ingredient.IngredientName = reader["IngredientName"].ToString();
                         ingredient.IsSelected = false;
-                        Ingredients.Add(ingredients);
+                        Ingredients.Add(ingredient);
                     }
-                    var defaultIngredient = new SelectListItem();
-                    defaultIngredient.Value = "0";
-                    defaultIngredient.Text = "--Select Ingredient--";
-                    Ingredients.Insert(0, defaultIngredient);
-                }
-            }
-        }
-
-        private void PopulateOrderItemsList()
-        {
-            using (SqlConnection conn = new SqlConnection(AppHelper.GetDBConnectionString()))
-            {
-                string query = "SELECT OrderItems, OrderID, MenuItemID, SizeID, Quantity, Subtotal FROM OrderItems";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                conn.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-                if (reader.HasRows)
-                {
-                    while (reader.Read())
-                    {
-                        var orderItems = new SelectListItem();
-                        orderItems.Value = reader["OrderItems"].ToString();
-                        orderItems.Value = reader["OrderID"].ToString();
-                        orderItems.Value = reader["MenuItemID"].ToString();
-                        orderItems.Value = reader["SizeID"].ToString();
-                        orderItems.Value = reader["Quantity"].ToString();
-                        orderItems.Value = reader["Subtotal"].ToString();
-                        OrderItems.Add(orderItems);
-
-                    }
-                    var defaultOrderItem = new SelectListItem();
-                    defaultOrderItem.Value = "0";
-                    defaultOrderItem.Text = "--Select Order Item--";
-                    OrderItems.Insert(0, defaultOrderItem);
                 }
             }
         }
     }
 
-    public class MenuItemInfo
+    public class IngredientInfo
     {
-        public int MenuItemID { get; set; }
-
-        public string ItemName { get; set; }
-
         public bool IsSelected { get; set; }
 
         public int IngredientID { get; set; }

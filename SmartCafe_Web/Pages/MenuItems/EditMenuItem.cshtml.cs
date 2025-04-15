@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using SmartCafe_Business;
 using SmartCafe_Web.Model;
-using System.Security.Claims;
 
 namespace SmartCafe_Web.Pages.MenuItems
 {
@@ -13,7 +12,6 @@ namespace SmartCafe_Web.Pages.MenuItems
     [BindProperties]
     public class EditMenuItemModel : PageModel
     {
-        private SelectListItem ingredients;
 
         public MenuItem CurrentItem { get; set; }
 
@@ -23,59 +21,62 @@ namespace SmartCafe_Web.Pages.MenuItems
 
         public List<SelectListItem> ItemType { get; set; } = new List<SelectListItem>();
 
-        public List<SelectListItem> Ingredients { get; set; } = new List<SelectListItem>();
+        public List<IngredientInfo> Ingredients { get; set; } = new List<IngredientInfo>();
 
         public List<SelectListItem> OrderItems { get; set; } = new List<SelectListItem>();
 
-        public List<MenuItemInfo> MenuItems { get; set; } = new List<MenuItemInfo>();
+        //public List<MenuItemInfo> MenuItems { get; set; } = new List<MenuItemInfo>();
 
         public List<int> SelectedMenuItemIngredientsIDs { get; set; } = new List<int>();
         public void OnGet(int id)
         {
-            PopulateMenuItemList();
+            PopulateMenuItemDetails(id);
             PopulateItemTypeList();
-            PopulateIngredientsList();
             SelectedMenuItemIngredientsIDs = PopulateSelectedMenuItemIngredientsIDs(id);
-
+            PopulateIngredientsList();
         }
         private List<int> PopulateSelectedMenuItemIngredientsIDs(int id)
         {
-            List<int> sSelectedMenuItemIngredientsIDs = new List<int>();
+            List<int> selectedMenuItemIngredientsIDs = new List<int>();
             using (SqlConnection conn = new SqlConnection(AppHelper.GetDBConnectionString()))
             {
-                string query = "";
+                string query = "SELECT IngredientID FROM MenuItemIngredients WHERE MenuItemID = @menuItemID";
                 SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("", id);
+                cmd.Parameters.AddWithValue("@menuItemID", id);
                 conn.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
                 if (reader.HasRows)
                 {
                     while (reader.Read())
                     {
-                        SelectedMenuItemIngredientsIDs.Add(reader.GetInt32(0));
+                        selectedMenuItemIngredientsIDs.Add(reader.GetInt32(0));
                     }
                 }
             }
-            return SelectedMenuItemIngredientsIDs;
+            return selectedMenuItemIngredientsIDs;
         }
 
-        private void PopulateMenuItemList()
+        private void PopulateMenuItemDetails(int id)
         {
             using (SqlConnection conn = new SqlConnection(AppHelper.GetDBConnectionString()))
             {
-                string query = "SELECT MenuItemID, ItemName, ItemImage, Price, ItemTypeID FROM MenuItem";
+                string query = "SELECT MenuItemID, ItemName, ItemImage, Price, ItemTypeID FROM MenuItem WHERE MenuItemID = @menuItemID";
                 SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@menuItemID", id);
                 conn.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
                 if (reader.HasRows)
                 {
                     while (reader.Read())
                     {
-                        var menuItem = new MenuItemInfo();
-                        menuItem.MenuItemID = int.Parse(reader["MenuItemID"].ToString());
-                        menuItem.ItemName = reader["ItemName"].ToString();
-                        menuItem.IsSelected = false;
-                        MenuItems.Add(menuItem);
+                        CurrentItem = new MenuItem
+                        {
+                            MenuItemID = reader.GetInt32(0),
+                            ItemName = reader.GetString(1),
+                            ItemImage = reader.GetString(2),
+                            Price = reader.GetDecimal(3),
+                            ItemTypeID = reader.GetInt32(4)
+                        };
                     }
                 }
             }
@@ -93,10 +94,10 @@ namespace SmartCafe_Web.Pages.MenuItems
                 {
                     while (reader.Read())
                     {
-                        var ingredient = new MenuItemInfo();
+                        var ingredient = new IngredientInfo();
                         ingredient.IngredientID = int.Parse(reader["IngredientID"].ToString());
                         ingredient.IngredientName = reader["IngredientName"].ToString();
-                        Ingredients.Add(ingredients);
+                        Ingredients.Add(ingredient);
                         if (SelectedMenuItemIngredientsIDs.Contains(ingredient.IngredientID))
                         {
                             ingredient.IsSelected = true;

@@ -18,9 +18,8 @@ namespace SmartCafe_Web.Pages.MenuItems
         {
             using (SqlConnection conn = new SqlConnection(AppHelper.GetDBConnectionString()))
             {
-                string cmdText = "SELECT i.ItemTypeID, i.ItemName, i.ItemImage, i.Price FROM MenuItem i" +
-                    "JOIN ItemType t ON i.ItemTypeID = t.ItemTypeID" +
-                    "WHERE  it.MenuItemID"; //HELP"
+                string cmdText = "SELECT i.MenuItemID, i.ItemName, i.ItemImage, i.Price, i.ItemTypeID" + " FROM MenuItem i " +
+                    "JOIN ItemType t ON i.ItemTypeID = t.ItemTypeID";
 
                 SqlCommand cmd = new SqlCommand(cmdText, conn);
                 conn.Open();
@@ -33,12 +32,12 @@ namespace SmartCafe_Web.Pages.MenuItems
 
                         ItemView items = new ItemView
                         {
-                            ItemTypeID = reader.GetInt32(0),
+                            MenuItemID = reader.GetInt32(0),
                             ItemName = reader.GetString(1),
                             ItemImage = reader.GetString(2),
-                            Price = reader.GetDecimal(4),
-                            ItemTypeName = reader.GetString(2),
-                            IngredientName = reader.GetString(3),
+                            Price = reader.GetDecimal(3),
+                            ItemTypeID = reader.GetInt32(4),
+                            //IngredientName = reader.GetString(3),
                             MenuItemIngredients = PopulateMenuItemIngredients(reader.GetInt32(0))
                         };
                         Items.Add(items);
@@ -47,13 +46,16 @@ namespace SmartCafe_Web.Pages.MenuItems
             }
         }
 
-        private List<string> PopulateMenuItemIngredients(int itemID)
+        private List<string> PopulateMenuItemIngredients(int menuItemID)
         {
             List<string> items = new List<string>();
             using (SqlConnection conn = new SqlConnection(AppHelper.GetDBConnectionString()))
             {
-                string cmdText = ""; //INNER JOIN
+                string cmdText = "SELECT n.IngredientName FROM Ingredients n " +
+                    "JOIN MenuItemIngredients mn ON n.IngredientID = mn.IngredientID " +
+                    "WHERE mn.MenuItemID = @MenuItemID"; //INNER JOIN
                 SqlCommand cmd = new SqlCommand(cmdText, conn);
+                cmd.Parameters.AddWithValue("@MenuItemID", menuItemID);
                 conn.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
                 if (reader.HasRows)
@@ -72,9 +74,9 @@ namespace SmartCafe_Web.Pages.MenuItems
             // delete the item from the database
             using (SqlConnection conn = new SqlConnection(AppHelper.GetDBConnectionString()))
             {
-                string cmdText = "DELETE FROM MenuItem WHERE ItemTypeID = @ItemTypeID";
+                string cmdText = "DELETE FROM MenuItem WHERE MenuItemID = @MenuItemID";
                 SqlCommand cmd = new SqlCommand(cmdText, conn);
-                cmd.Parameters.AddWithValue("@ItemTypeID", id);
+                cmd.Parameters.AddWithValue("@MenuItemID", id);
                 conn.Open();
                 cmd.ExecuteNonQuery();
             }
