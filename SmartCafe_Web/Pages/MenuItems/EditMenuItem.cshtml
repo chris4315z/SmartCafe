@@ -10,6 +10,8 @@
 
 </div>
 <form method="post">
+    <!-- Need the following line, or MenuItemID will be 0, and wont be able to edit item, wont work properly. -->
+    <input type="hidden" asp-for="CurrentItem.MenuItemID" />
     <div class="row my-2">
         <div class="col-4">
             <label asp-for="CurrentItem.ItemName" class="form-label"></label>
@@ -17,6 +19,16 @@
         <div class="col-12">
             <input asp-for="CurrentItem.ItemName" type="text" class="form-control" />
             <span asp-validation-for="CurrentItem.ItemName" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row my-2">
+        <div class="col-4">
+            <label asp-for="CurrentItem.ItemImage" class="form-label"></label>
+        </div>
+        <div class="col-12">
+            <input asp-for="CurrentItem.ItemImage" type="text" class="form-control" />
+            <span asp-validation-for="CurrentItem.ItemImage" class="text-danger"></span>
         </div>
     </div>
 
@@ -32,11 +44,11 @@
 
     <div class="row my-2">
         <div class="col-4">
-            <label asp-for="CurrentItem.ItemImage" class="form-label"></label>
+            <label asp-for="CurrentItem.ItemTypeID" class="form-label"></label>
         </div>
         <div class="col-12">
-            <input asp-for="CurrentItem.ItemImage" type="text" class="form-control" />
-            <span asp-validation-for="CurrentItem.ItemImage" class="text-danger"></span>
+            <input asp-for="CurrentItem.ItemTypeID" type="text" class="form-control" />
+            <span asp-validation-for="CurrentItem.ItemTypeID" class="text-danger"></span>
         </div>
     </div>
     <div class="row my-2">

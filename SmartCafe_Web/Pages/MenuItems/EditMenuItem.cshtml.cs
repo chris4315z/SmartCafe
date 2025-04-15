@@ -135,5 +135,54 @@ namespace SmartCafe_Web.Pages.MenuItems
                 }
             }
         }
+
+        public IActionResult OnPost()
+        {
+            if (!ModelState.IsValid)
+            {
+                // Re-populate data for the page in case of error
+                PopulateItemTypeList();
+                PopulateIngredientsList();
+                return Page();
+            }
+
+            using (SqlConnection conn = new SqlConnection(AppHelper.GetDBConnectionString()))
+            {
+                string updateQuery = @"
+                    UPDATE MenuItem 
+                    SET ItemName = @ItemName, 
+                    ItemImage = @ItemImage, 
+                    Price = @Price, 
+                    ItemTypeID = @ItemTypeID 
+                    WHERE MenuItemID = @MenuItemID";
+
+                SqlCommand cmd = new SqlCommand(updateQuery, conn);
+                cmd.Parameters.AddWithValue("@ItemName", CurrentItem.ItemName);
+                cmd.Parameters.AddWithValue("@ItemImage", CurrentItem.ItemImage);
+                cmd.Parameters.AddWithValue("@Price", CurrentItem.Price);
+                cmd.Parameters.AddWithValue("@ItemTypeID", CurrentItem.ItemTypeID);
+                cmd.Parameters.AddWithValue("@MenuItemID", CurrentItem.MenuItemID);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+
+                // Update MenuItemIngredients (simple approach: delete and re-insert)
+                SqlCommand deleteCmd = new SqlCommand("DELETE FROM MenuItemIngredients WHERE MenuItemID = @MenuItemID", conn);
+                deleteCmd.Parameters.AddWithValue("@MenuItemID", CurrentItem.MenuItemID);
+                deleteCmd.ExecuteNonQuery();
+
+                foreach (int ingredientId in SelectedMenuItemIngredientsIDs)
+                {
+                    SqlCommand insertCmd = new SqlCommand("INSERT INTO MenuItemIngredients (MenuItemID, IngredientID) VALUES (@MenuItemID, @IngredientID)", conn);
+                    insertCmd.Parameters.AddWithValue("@MenuItemID", CurrentItem.MenuItemID);
+                    insertCmd.Parameters.AddWithValue("@IngredientID", ingredientId);
+                    insertCmd.ExecuteNonQuery();
+                }
+            }
+
+            return RedirectToPage("/MenuItems/SearchMenuItems", new { id = CurrentItem.MenuItemID });
+        }
+
+
     }
 }
