@@ -11,6 +11,7 @@ namespace SmartCafe_Web.Pages.Account
     [Authorize]
     public class ProfileModel : PageModel
     {
+        // Bind
         [BindProperty]
         public ProfileView UserProfile { get; set; } = new ProfileView();
         public void OnGet()
