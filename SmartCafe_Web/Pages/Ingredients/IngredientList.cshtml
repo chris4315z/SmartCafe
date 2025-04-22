@@ -1,0 +1,37 @@
+﻿@page
+@model SmartCafe_Web.Pages.Ingredients.IngredientListModel
+@{
+}
+<form method="post">
+    <div class="row text-center">
+        <div class="col-12">
+            <label class="form-label fs-1">Ingredient List</label>
+        </div>
+    </div>
+    <div class="row my-2">
+        <div class="col-2">
+            <a asp-page="IngredientGenre" class="btn btn-primary"><i class="bi bi-plus-square"></i> Add Ingredient</a>
+        </div>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Ingredient Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ingredient in Model.IngredientList)
+            {
+                <tr>
+                    <td>@ingredient.IngredientName</td>
+                    <td>
+                        <a asp-page="./EditIngredient" asp-route-id="@ingredient.IngredientID" class="btn btn-primary"><i class="bi bi-pencil-square"></i> Edit</a>
+                        <button onclick="return confirm('Are you sure?')" class="btn btn-danger" asp-route-id="@ingredient.IngredientID" asp-page-handler="Delete"><i class="bi bi-trash3"></i> Delete</button>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</form>

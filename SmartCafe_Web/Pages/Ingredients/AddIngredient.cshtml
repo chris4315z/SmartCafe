@@ -1,0 +1,28 @@
+﻿@page
+@model SmartCafe_Web.Pages.Ingredients.AddIngredientModel
+@{
+}
+
+<div class=" row text-center">
+    <div class="col-12">
+        <label class="form-label fs-1">Add Ingredient</label>
+    </div>
+</div>
+
+<form method="post">
+    <div class="row my-2">
+        <div class="col-4">
+            <label asp-for="NewIngredient.IngredientName" class="form-label"></label>
+        </div>
+        <div class="col-12">
+            <input asp-for="NewIngredient.IngredientName" type="text" class="form-control" />
+            <span asp-validation-for="NewIngredient.IngredientName" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row my-2">
+        <div class="col-12">
+            <button type="submit" class="form-control btn btn-primary">Add Ingredient</button>
+        </div>
+    </div>
+</form>
