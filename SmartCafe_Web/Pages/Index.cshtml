@@ -4,8 +4,16 @@
     ViewData["Title"] = "Home page";
 }
 
+
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    <button class="btn btn-primary">Click Me</button>
+    <div class="row justify-content-start">
+        @foreach (var item in Model.ItemDisplays)
+        {
+            <div class="col-4">
+                <a asp-page="ViewItem" asp-route-id="@item.MenuItemID">
+                    <img src="@item.ItemImage" title="@item.ItemName" />
+                </a>
+            </div>
+        }
+    </div>
 </div>

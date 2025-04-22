@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Data.SqlClient;
@@ -6,6 +7,8 @@ using SmartCafe_Web.Model;
 
 namespace SmartCafe_Web.Pages.MenuItems
 {
+    [Authorize]
+    [BindProperties]
     public class SearchMenuItemsModel : PageModel
     {
         public List<ItemView> Items { get; set; } = new List<ItemView>();
