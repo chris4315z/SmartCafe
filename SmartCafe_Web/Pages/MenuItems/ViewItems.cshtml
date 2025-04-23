@@ -1,0 +1,70 @@
+﻿@page
+@model SmartCafe_Web.Pages.MenuItems.ViewItemsModel
+@{
+}
+<div class="row txt-center">
+    <div class="col-12">
+        <label class="form-label fs-1">Search Item</label>
+    </div>
+</div>
+<div class="row my-2">
+    <div class="col-2">
+        <!-- left column -->
+        <img src="@Model.MenuItem.ItemImage" alt="Item Image" class="img-thumbnail" />
+    </div>
+    <div class="col-10">
+        <!-- right column -->
+        <div class="row my-2">
+            <div class="col-4">
+                <label class="form-label" asp-for="@Model.MenuItem.ItemName"></label>
+            </div>
+            <div class="col-8">
+                <label class="form-label">@Model.MenuItem.ItemName</label>
+            </div>
+        </div>
+
+        <div class="row my-2">
+            <div class="col-4">
+                <label class="form-label" asp-for="@Model.MenuItem.MenuItemID"></label>
+            </div>
+            <div class="col-8">
+                <label class="form-label">@Model.MenuItem.MenuItemID</label>
+            </div>
+        </div>
+
+        <div class="row my-2">
+            <div class="col-4">
+                <label class="form-label" asp-for="@Model.MenuItem.Price"></label>
+            </div>
+            <div class="col-8">
+                <label class="form-label">@Model.MenuItem.Price</label>
+            </div>
+        </div>
+
+        <div class="row my-2">
+            <div class="col-4">
+                <label class="form-label" asp-for="@Model.MenuItem.MenuItemIngredients"></label>
+            </div>
+            <div class="col-8">
+                <label class="form-label">@string.Join(", ", Model.MenuItem.MenuItemIngredients)</label>
+            </div>
+        </div>
+
+        <div class="row my-2">
+            <div class="col-4">
+                <label class="form-label" asp-for="@Model.MenuItem.ItemTypeID"></label>
+            </div>
+            <div class="col-8">
+                <label class="form-label">@Model.MenuItem.ItemTypeID</label>
+            </div>
+        </div>
+
+        <div class="row my-2">
+            <div class="col-12">
+                <a asp-page="EditMenuItem" asp-route-id="@Model.MenuItem.MenuItemID" class="btn btn-primary">Edit</a>
+                <button onclick="return confirm('Are you sure?')" class="btn btn-danger" asp-route-id="@Model.MenuItem.MenuItemID" asp-page-handler="Delete">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<hr />

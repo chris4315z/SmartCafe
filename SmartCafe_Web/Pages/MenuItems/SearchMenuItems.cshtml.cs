@@ -11,7 +11,7 @@ namespace SmartCafe_Web.Pages.MenuItems
     [BindProperties]
     public class SearchMenuItemsModel : PageModel
     {
-        public List<ItemView> Items { get; set; } = new List<ItemView>();
+        public List<ItemView> MenuItem { get; set; } = new List<ItemView>();
         public void OnGet()
         {
             PopulateMenuItemList();
@@ -43,7 +43,7 @@ namespace SmartCafe_Web.Pages.MenuItems
                             //IngredientName = reader.GetString(3),
                             MenuItemIngredients = PopulateMenuItemIngredients(reader.GetInt32(0))
                         };
-                        Items.Add(items);
+                        MenuItem.Add(items);
                     }
                 }
             }
