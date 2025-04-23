@@ -37,7 +37,40 @@ body {
         transition: opacity 0.5s ease-in-out;
     }
 
+.welcome-box {
+    background-color: rgba(0,0,0,0.6);
+    color: white;
+    padding: 2rem;
+    margin: 3rem 0;
+    border-radius: 15px;
+    width: 200%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+}
 
+.home-background {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-image: url('/images/SmartCafe1.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+
+    .welcome-box h2 {
+        font-size: 2.2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .welcome-box p {
+        font-size: 1.2rem;
+        margin-bottom: 0;
+    }
 
 .cover-image {
     width: 100px;

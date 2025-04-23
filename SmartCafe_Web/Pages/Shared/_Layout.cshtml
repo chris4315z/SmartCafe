@@ -62,11 +62,25 @@
             </div>
         </nav>
     </header>
-    <div class="container bg-light p-3">
-        <main role="main" class="pb-3">
+    @{
+        var isHomePage = ViewContext.RouteData.Values["Page"]?.ToString()?.ToLower() == "/index";
+    }
+
+    @if (!isHomePage)
+    {
+        <div class="container bg-light p-3">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+    }
+    else
+    {
+        <main role="main">
             @RenderBody()
         </main>
-    </div>
+    }
+
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
