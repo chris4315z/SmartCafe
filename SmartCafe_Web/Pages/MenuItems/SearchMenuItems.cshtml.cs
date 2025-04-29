@@ -21,8 +21,8 @@ namespace SmartCafe_Web.Pages.MenuItems
         {
             using (SqlConnection conn = new SqlConnection(AppHelper.GetDBConnectionString()))
             {
-                string cmdText = "SELECT i.MenuItemID, i.ItemName, i.ItemImage, i.Price, i.ItemTypeID" + " FROM MenuItem i " +
-                    "JOIN ItemType t ON i.ItemTypeID = t.ItemTypeID";
+                string cmdText = "SELECT i.MenuItemID, i.ItemName, i.ItemImage, i.Price, i.ItemTypeID, t.ItemTypeName " + " FROM MenuItem i " +
+                    "JOIN ItemType t ON i.ItemTypeID= t.ItemTypeID";
 
                 SqlCommand cmd = new SqlCommand(cmdText, conn);
                 conn.Open();
@@ -40,7 +40,7 @@ namespace SmartCafe_Web.Pages.MenuItems
                             ItemImage = reader.GetString(2),
                             Price = reader.GetDecimal(3),
                             ItemTypeID = reader.GetInt32(4),
-                            //IngredientName = reader.GetString(3),
+                            ItemTypeName = reader.GetString(5),
                             MenuItemIngredients = PopulateMenuItemIngredients(reader.GetInt32(0))
                         };
                         MenuItem.Add(items);

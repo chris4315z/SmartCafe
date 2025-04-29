@@ -49,7 +49,7 @@
             <label asp-for="CurrentItem.ItemTypeID" class="form-label"></label>
         </div>
         <div class="col-12">
-            <input asp-for="CurrentItem.ItemTypeID" type="text" class="form-control" />
+            <select asp-for="CurrentItem.ItemTypeID" class="form-control" asp-items="Model.ItemType"></select>
             <span asp-validation-for="CurrentItem.ItemTypeID" class="text-danger"></span>
         </div>
     </div>
