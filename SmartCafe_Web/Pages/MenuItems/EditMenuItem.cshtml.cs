@@ -8,7 +8,7 @@ using SmartCafe_Web.Model;
 
 namespace SmartCafe_Web.Pages.MenuItems
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [BindProperties]
     public class EditMenuItemModel : PageModel
     {

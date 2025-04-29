@@ -7,7 +7,7 @@ using SmartCafe_Web.Model;
 
 namespace SmartCafe_Web.Pages.Ingredients
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [BindProperties]
     public class IngredientListModel : PageModel
     {

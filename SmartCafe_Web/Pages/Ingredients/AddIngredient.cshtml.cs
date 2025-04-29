@@ -7,8 +7,8 @@ using SmartCafe_Web.Model;
 
 namespace SmartCafe_Web.Pages.Ingredients
 {
-    //[Authorize(Roles = "Admin")]
-    [Authorize]
+    // Makes it to where the Admin can only see this page
+    [Authorize(Roles = "Admin")]
     [BindProperties]
     public class AddIngredientModel : PageModel
     {

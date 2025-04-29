@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace SmartCafe_Web.Pages.MenuItems
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [BindProperties]
     public class AddMenuItemModel : PageModel
     {
