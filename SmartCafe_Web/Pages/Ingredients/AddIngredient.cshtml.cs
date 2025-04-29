@@ -7,7 +7,9 @@ using SmartCafe_Web.Model;
 
 namespace SmartCafe_Web.Pages.Ingredients
 {
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
+    [Authorize]
+    [BindProperties]
     public class AddIngredientModel : PageModel
     {
         [BindProperty]
@@ -26,7 +28,7 @@ namespace SmartCafe_Web.Pages.Ingredients
                     using (SqlConnection conn = new SqlConnection(AppHelper.GetDBConnectionString()))
                     {
                         conn.Open();
-                        string sql = "INSERT INTO Ingredient (IngredientName) VALUES (@IngredientName)";
+                        string sql = "INSERT INTO Ingredients (IngredientName) VALUES (@IngredientName)";
                         using (SqlCommand cmd = new SqlCommand(sql, conn))
                         {
                             cmd.Parameters.AddWithValue("@IngredientName", NewIngredient.IngredientName);

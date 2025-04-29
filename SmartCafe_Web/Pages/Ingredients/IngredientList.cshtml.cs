@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Data.SqlClient;
@@ -6,6 +7,8 @@ using SmartCafe_Web.Model;
 
 namespace SmartCafe_Web.Pages.Ingredients
 {
+    [Authorize]
+    [BindProperties]
     public class IngredientListModel : PageModel
     {
         public List<Ingredient> IngredientList { get; set; } = new List<Ingredient>();
@@ -18,14 +21,16 @@ namespace SmartCafe_Web.Pages.Ingredients
         {
             try
             {
+                /*
                 if (User.IsInRole("Admin") == false)
                 {
                     return RedirectToPage("/Account/AccessDenied");
                 }
+                */
                 using (SqlConnection conn = new SqlConnection(AppHelper.GetDBConnectionString()))
                 {
                     conn.Open();
-                    string sql = "DELETE FROM Ingredient WHERE IngredientID = @IngredientID";
+                    string sql = "DELETE FROM Ingredients WHERE IngredientID = @IngredientID";
                     using (SqlCommand cmd = new SqlCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@IngredientID", id);
@@ -47,7 +52,7 @@ namespace SmartCafe_Web.Pages.Ingredients
                 using (SqlConnection conn = new SqlConnection(AppHelper.GetDBConnectionString()))
                 {
                     conn.Open();
-                    string sql = "SELECT IngredientID, IngredientName FROM Ingredient ORDER BY IngredientName";
+                    string sql = "SELECT IngredientID, IngredientName FROM Ingredients ORDER BY IngredientName";
                     using (SqlCommand cmd = new SqlCommand(sql, conn))
                     {
                         using (SqlDataReader reader = cmd.ExecuteReader())
