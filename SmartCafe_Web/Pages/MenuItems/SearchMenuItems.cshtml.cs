@@ -12,8 +12,10 @@ namespace SmartCafe_Web.Pages.MenuItems
     public class SearchMenuItemsModel : PageModel
     {
         public List<ItemView> MenuItem { get; set; } = new List<ItemView>();
+        public bool CanManageMenuItems { get; set; }
         public void OnGet()
         {
+            CanManageMenuItems = User.IsInRole("Admin");
             PopulateMenuItemList();
         }
 
@@ -74,6 +76,11 @@ namespace SmartCafe_Web.Pages.MenuItems
 
         public IActionResult OnPostDelete(int id)
         {
+            if (!(User.IsInRole("Admin")))
+            {
+                // User not allowed
+                return Forbid();
+            }
             // delete the item from the database
             using (SqlConnection conn = new SqlConnection(AppHelper.GetDBConnectionString()))
             {

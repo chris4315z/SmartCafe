@@ -27,7 +27,7 @@
                         @if(User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/MenuItems/SearchMenuItems">Search Item</a>
+                                <a class="nav-link text-dark" asp-area="" asp-page="/MenuItems/SearchMenuItems">Menu</a>
                             </li>
                             @*Only Admins see this*@
                             @if (User.IsInRole("Admin"))
