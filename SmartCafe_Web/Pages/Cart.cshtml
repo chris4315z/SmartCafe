@@ -1,4 +1,43 @@
 ﻿@page
 @model SmartCafe_Web.Pages.CartModel
 @{
+    ViewData["Title"] = "Cart";
+}
+
+<h2>Your Cart</h2>
+
+@if (Model.CartItems.Count == 0)
+{
+    <div class="alert alert-info">Your cart is empty.</div>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Item Name</th>
+                <th>Price</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.CartItems)
+            {
+                <tr>
+                    <td>@item.ItemName</td>
+                    <td>@item.Price.ToString("C")</td>
+                    <td>
+                        <form method="post" asp-page-handler="Remove" asp-route-id="@item.MenuItemID" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="text-end">
+        <h4>Total: @Model.CartItems.Sum(i => i.Price).ToString("C")</h4>
+        <a class="btn btn-success" href="#">Checkout</a>
+    </div>
 }
