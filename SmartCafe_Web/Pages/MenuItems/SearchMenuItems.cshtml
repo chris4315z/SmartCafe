@@ -42,15 +42,17 @@
                             <label class="form-label">@item.ItemName</label>
                         </div>
                     </div>
-
-                    <div class="row my-2">
-                        <div class="col-4">
-                            <label class="form-label" asp-for="@item.MenuItemID"></label>
+                    @if(Model.CanManageMenuItems)
+                    {
+                        <div class="row my-2">
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@item.MenuItemID"></label>
+                            </div>
+                            <div class="col-8">
+                                <label class="form-label">@item.MenuItemID</label>
+                            </div>
                         </div>
-                        <div class="col-8">
-                            <label class="form-label">@item.MenuItemID</label>
-                        </div>
-                    </div>
+                    }
 
                     <div class="row my-2">
                         <div class="col-4">
