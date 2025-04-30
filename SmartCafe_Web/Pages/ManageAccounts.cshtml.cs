@@ -5,12 +5,13 @@ using Microsoft.Data.SqlClient;
 using SmartCafe_Business;
 using SmartCafe_Web.Model;
 using System.Collections.Generic;
+using System.Security.Claims;
 
-namespace SmartCafe_Web.Pages.SystemUsers
+namespace SmartCafe_Web.Pages
 {
     [Authorize(Roles = "Admin")]
     [BindProperties]
-    public class SystemUserListModel : PageModel
+    public class ManageAccountsModel : PageModel
     {
         public List<SystemUser> SystemUserList { get; set; } = new List<SystemUser>();
 
@@ -21,6 +22,12 @@ namespace SmartCafe_Web.Pages.SystemUsers
 
         public IActionResult OnPostDelete(int id)
         {
+            if (id == GetCurrentUserID())
+            {
+                TempData["ErrorMessage"] = "You cannot delete your own account.";
+                return RedirectToPage("/ManageAccounts");
+            }
+
             try
             {
                 using (SqlConnection conn = new SqlConnection(AppHelper.GetDBConnectionString()))
@@ -33,57 +40,58 @@ namespace SmartCafe_Web.Pages.SystemUsers
                         cmd.ExecuteNonQuery();
                     }
                 }
-                return RedirectToPage("/ManageAccounts");  // Updated redirect path
+                return RedirectToPage("/ManageAccounts");
             }
             catch
             {
-                throw;
+                TempData["ErrorMessage"] = "An error occurred while trying to delete the account.";
+                return RedirectToPage("/ManageAccounts");
             }
         }
 
         public IActionResult OnPostPromote(int id)
         {
-            try
+            if (id == GetCurrentUserID())
             {
-                using (SqlConnection conn = new SqlConnection(AppHelper.GetDBConnectionString()))
-                {
-                    conn.Open();
-                    // Assuming 1 is Admin in the AccountTypeID field
-                    string sql = "UPDATE dbo.SystemUser SET AccountTypeID = 1 WHERE SystemUserID = @SystemUserID";
-                    using (SqlCommand cmd = new SqlCommand(sql, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@SystemUserID", id);
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-                return RedirectToPage("/ManageAccounts");  // Updated redirect path
+                TempData["ErrorMessage"] = "You cannot promote your own account.";
+                return RedirectToPage("/ManageAccounts");
             }
-            catch
-            {
-                throw;
-            }
+
+            return UpdateAccountType(id, 1); // 1 = Admin
         }
 
         public IActionResult OnPostDemote(int id)
+        {
+            if (id == GetCurrentUserID())
+            {
+                TempData["ErrorMessage"] = "You cannot demote your own account.";
+                return RedirectToPage("/ManageAccounts");
+            }
+
+            return UpdateAccountType(id, 2); // 2 = User
+        }
+
+        private IActionResult UpdateAccountType(int userId, int newTypeId)
         {
             try
             {
                 using (SqlConnection conn = new SqlConnection(AppHelper.GetDBConnectionString()))
                 {
                     conn.Open();
-                    // Assuming 2 is User in the AccountTypeID field
-                    string sql = "UPDATE dbo.SystemUser SET AccountTypeID = 2 WHERE SystemUserID = @SystemUserID";
+                    string sql = "UPDATE dbo.SystemUser SET AccountTypeID = @AccountTypeID WHERE SystemUserID = @SystemUserID";
                     using (SqlCommand cmd = new SqlCommand(sql, conn))
                     {
-                        cmd.Parameters.AddWithValue("@SystemUserID", id);
+                        cmd.Parameters.AddWithValue("@AccountTypeID", newTypeId);
+                        cmd.Parameters.AddWithValue("@SystemUserID", userId);
                         cmd.ExecuteNonQuery();
                     }
                 }
-                return RedirectToPage("/ManageAccounts");  // Updated redirect path
+                return RedirectToPage("/ManageAccounts");
             }
             catch
             {
-                throw;
+                TempData["ErrorMessage"] = "An error occurred while updating the account.";
+                return RedirectToPage("/ManageAccounts");
             }
         }
 
@@ -116,8 +124,14 @@ namespace SmartCafe_Web.Pages.SystemUsers
             }
             catch
             {
-                throw;
+                TempData["ErrorMessage"] = "Failed to load user list.";
             }
+        }
+
+        private int GetCurrentUserID()
+        {
+            string? userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            return int.TryParse(userIdStr, out int userId) ? userId : 0;
         }
     }
 }
