@@ -17,26 +17,32 @@ else
             <tr>
                 <th>Image</th>
                 <th>Item Name</th>
+                <th>Quantity</th>
                 <th>Price</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.CartItems)
+            @foreach (var group in Model.CartItems
+           .GroupBy(item => item.ItemName)
+           .Select(g => new { ItemName = g.Key, Quantity = g.Count(), Price = g.First().Price, ItemImage = g.First().ItemImage, MenuItemID = g.First().MenuItemID }))
             {
                 <tr>
                     <!-- Displaying item image -->
-                    <td><img src="@item.ItemImage" alt="@item.ItemName" width="50" height="50" /></td>
+                    <td><img src="@group.ItemImage" alt="@group.ItemName" width="50" height="50" /></td>
 
                     <!-- Displaying item name -->
-                    <td>@item.ItemName</td>
+                    <td>@group.ItemName</td>
+
+                    <!-- Displaying quantity -->
+                    <td>@group.Quantity</td>
 
                     <!-- Displaying item price -->
-                    <td>@item.Price.ToString("C")</td>
+                    <td>@(group.Price * group.Quantity)</td>
 
                     <!-- Remove button -->
                     <td>
-                        <form method="post" asp-page-handler="Remove" asp-route-id="@item.MenuItemID" style="display:inline;">
+                        <form method="post" asp-page-handler="Remove" asp-route-id="@group.MenuItemID" style="display:inline;" onsubmit="return confirmRemoval();">
                             <button type="submit" class="btn btn-danger btn-sm">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash" viewBox="0 0 20 20">
                                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
@@ -61,5 +67,11 @@ else
             </svg>
         </a>
     </div>
-
 }
+
+<script>
+    // JavaScript to show a confirmation dialog before removing an item from the cart
+    function confirmRemoval() {
+        return confirm("Are you sure you want to remove this item from your cart?");
+    }
+</script>
