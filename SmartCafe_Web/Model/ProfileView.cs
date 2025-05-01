@@ -4,6 +4,7 @@ namespace SmartCafe_Web.Model
 {
     public class ProfileView
     {
+        // This is the profile view model
         [Display(Name = "First Name:")]
         public string FirstName { get; set; }
 

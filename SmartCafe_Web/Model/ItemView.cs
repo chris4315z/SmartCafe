@@ -4,6 +4,7 @@ namespace SmartCafe_Web.Model
 {
     public class ItemView
     {
+        // This is the item view model
         [Display(Name = "Item ID")]
         public int MenuItemID { get; set; }
 

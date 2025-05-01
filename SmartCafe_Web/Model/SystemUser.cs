@@ -2,6 +2,7 @@
 {
     public class SystemUser
     {
+        // System user model
         public int SystemUserID { get; set; }
         public string SystemUsername { get; set; }
         public string SystemUserEmailAddress { get; set; }

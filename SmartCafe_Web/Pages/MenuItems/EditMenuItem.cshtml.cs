@@ -12,7 +12,7 @@ namespace SmartCafe_Web.Pages.MenuItems
     [BindProperties]
     public class EditMenuItemModel : PageModel
     {
-
+        // Properties to hold data for the view
         public MenuItem CurrentItem { get; set; }
 
         public List<SelectListItem> MenuItem { get; set; } = new List<SelectListItem>();
@@ -25,16 +25,19 @@ namespace SmartCafe_Web.Pages.MenuItems
 
         public List<SelectListItem> OrderItems { get; set; } = new List<SelectListItem>();
 
-        //public List<MenuItemInfo> MenuItems { get; set; } = new List<MenuItemInfo>();
-
+        // List of selected ingredient IDs for the menu item
         public List<int> SelectedMenuItemIngredientsIDs { get; set; } = new List<int>();
+
+        // Runs when the page is first accessed (GET)
         public void OnGet(int id)
         {
-            PopulateMenuItemDetails(id);
-            PopulateItemTypeList();
-            SelectedMenuItemIngredientsIDs = PopulateSelectedMenuItemIngredientsIDs(id);
-            PopulateIngredientsList();
+            PopulateMenuItemDetails(id);                    // Load item details from DB
+            PopulateItemTypeList();                         // Load dropdown list of item types
+            SelectedMenuItemIngredientsIDs = PopulateSelectedMenuItemIngredientsIDs(id);  // Get selected ingredient IDs
+            PopulateIngredientsList();                      // Load ingredient options and mark selected ones
         }
+
+        // Retrieves the ingredient IDs currently assigned to the menu item
         private List<int> PopulateSelectedMenuItemIngredientsIDs(int id)
         {
             List<int> selectedMenuItemIngredientsIDs = new List<int>();
@@ -56,6 +59,7 @@ namespace SmartCafe_Web.Pages.MenuItems
             return selectedMenuItemIngredientsIDs;
         }
 
+        // Retrieves the main details of the menu item from the DB
         private void PopulateMenuItemDetails(int id)
         {
             using (SqlConnection conn = new SqlConnection(AppHelper.GetDBConnectionString()))
@@ -82,6 +86,7 @@ namespace SmartCafe_Web.Pages.MenuItems
             }
         }
 
+        // Loads the full ingredient list from the DB and marks selected ones
         private void PopulateIngredientsList()
         {
             using (SqlConnection conn = new SqlConnection(AppHelper.GetDBConnectionString()))
@@ -98,19 +103,15 @@ namespace SmartCafe_Web.Pages.MenuItems
                         ingredient.IngredientID = int.Parse(reader["IngredientID"].ToString());
                         ingredient.IngredientName = reader["IngredientName"].ToString();
                         Ingredients.Add(ingredient);
-                        if (SelectedMenuItemIngredientsIDs.Contains(ingredient.IngredientID))
-                        {
-                            ingredient.IsSelected = true;
-                        }
-                        else
-                        {
-                            ingredient.IsSelected = false;
-                        }
+
+                        // Set whether the ingredient is currently selected for the item
+                        ingredient.IsSelected = SelectedMenuItemIngredientsIDs.Contains(ingredient.IngredientID);
                     }
                 }
             }
         }
 
+        // Loads list of item types for dropdown (e.g., food, drink, etc.)
         private void PopulateItemTypeList()
         {
             using (SqlConnection conn = new SqlConnection(AppHelper.GetDBConnectionString()))
@@ -128,6 +129,8 @@ namespace SmartCafe_Web.Pages.MenuItems
                         itemType.Text = reader["ItemTypeName"].ToString();
                         ItemType.Add(itemType);
                     }
+
+                    // Add default "Select Item Type" option at the top
                     var defaultItemType = new SelectListItem();
                     defaultItemType.Value = "0";
                     defaultItemType.Text = "--Select Item Type--";
@@ -136,11 +139,12 @@ namespace SmartCafe_Web.Pages.MenuItems
             }
         }
 
+        // Called when the form is submitted (POST)
         public IActionResult OnPost()
         {
             if (!ModelState.IsValid)
             {
-                // Re-populate data for the page in case of error
+                // If form has validation errors, reload dropdowns and ingredient list
                 PopulateItemTypeList();
                 PopulateIngredientsList();
                 return Page();
@@ -148,12 +152,13 @@ namespace SmartCafe_Web.Pages.MenuItems
 
             using (SqlConnection conn = new SqlConnection(AppHelper.GetDBConnectionString()))
             {
+                // Update the MenuItem table with new values
                 string updateQuery = @"
                     UPDATE MenuItem 
                     SET ItemName = @ItemName, 
-                    ItemImage = @ItemImage, 
-                    Price = @Price, 
-                    ItemTypeID = @ItemTypeID 
+                        ItemImage = @ItemImage, 
+                        Price = @Price, 
+                        ItemTypeID = @ItemTypeID 
                     WHERE MenuItemID = @MenuItemID";
 
                 SqlCommand cmd = new SqlCommand(updateQuery, conn);
@@ -166,11 +171,12 @@ namespace SmartCafe_Web.Pages.MenuItems
                 conn.Open();
                 cmd.ExecuteNonQuery();
 
-                // Update MenuItemIngredients (simple approach: delete and re-insert)
+                // Remove all existing ingredients linked to this item
                 SqlCommand deleteCmd = new SqlCommand("DELETE FROM MenuItemIngredients WHERE MenuItemID = @MenuItemID", conn);
                 deleteCmd.Parameters.AddWithValue("@MenuItemID", CurrentItem.MenuItemID);
                 deleteCmd.ExecuteNonQuery();
 
+                // Re-insert selected ingredients
                 foreach (int ingredientId in SelectedMenuItemIngredientsIDs)
                 {
                     SqlCommand insertCmd = new SqlCommand("INSERT INTO MenuItemIngredients (MenuItemID, IngredientID) VALUES (@MenuItemID, @IngredientID)", conn);
@@ -180,9 +186,8 @@ namespace SmartCafe_Web.Pages.MenuItems
                 }
             }
 
+            // Redirect back to the search or listing page
             return RedirectToPage("/MenuItems/SearchMenuItems", new { id = CurrentItem.MenuItemID });
         }
-
-
     }
 }

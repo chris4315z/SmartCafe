@@ -6,7 +6,7 @@ namespace SmartCafe_Web.Model
 {
     public class MenuItem
     {
-
+        // This is the menuitem model
         public int MenuItemID{ get; set; }
 
         [Required(ErrorMessage = "Item Name is required")]

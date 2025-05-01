@@ -8,19 +8,24 @@ using System.Text.Json;
 
 namespace SmartCafe_Web.Pages.MenuItems
 {
-    [Authorize]
+    [Authorize] // Only authorized users can access this page
     [BindProperties]
     public class SearchMenuItemsModel : PageModel
     {
+        // List to hold menu items for display
         public List<ItemView> MenuItem { get; set; } = new List<ItemView>();
+
+        // Flag to determine if the current user has admin rights
         public bool CanManageMenuItems { get; set; }
 
+        // Handles GET request to display the menu items
         public void OnGet()
         {
-            CanManageMenuItems = User.IsInRole("Admin");
-            PopulateMenuItemList();
+            CanManageMenuItems = User.IsInRole("Admin"); // Check if user is admin
+            PopulateMenuItemList(); // Load all menu items from database
         }
 
+        // Retrieves all menu items and their details from the database
         private void PopulateMenuItemList()
         {
             using (SqlConnection conn = new SqlConnection(AppHelper.GetDBConnectionString()))
@@ -37,6 +42,7 @@ namespace SmartCafe_Web.Pages.MenuItems
                 {
                     while (reader.Read())
                     {
+                        // Construct a menu item object with ingredient list
                         ItemView items = new ItemView
                         {
                             MenuItemID = reader.GetInt32(0),
@@ -53,6 +59,7 @@ namespace SmartCafe_Web.Pages.MenuItems
             }
         }
 
+        // Gets the list of ingredients for a specific menu item
         private List<string> PopulateMenuItemIngredients(int menuItemID)
         {
             List<string> items = new List<string>();
@@ -60,7 +67,8 @@ namespace SmartCafe_Web.Pages.MenuItems
             {
                 string cmdText = "SELECT n.IngredientName FROM Ingredients n " +
                                  "JOIN MenuItemIngredients mn ON n.IngredientID = mn.IngredientID " +
-                                 "WHERE mn.MenuItemID = @MenuItemID"; //INNER JOIN
+                                 "WHERE mn.MenuItemID = @MenuItemID";
+
                 SqlCommand cmd = new SqlCommand(cmdText, conn);
                 cmd.Parameters.AddWithValue("@MenuItemID", menuItemID);
                 conn.Open();
@@ -69,22 +77,23 @@ namespace SmartCafe_Web.Pages.MenuItems
                 {
                     while (reader.Read())
                     {
-                        items.Add(reader.GetString(0));
+                        items.Add(reader.GetString(0)); // Add ingredient name to list
                     }
                 }
             }
             return items;
         }
 
+        // Handles POST request to delete a menu item
         public IActionResult OnPostDelete(int id)
         {
             if (!(User.IsInRole("Admin")))
             {
-                // User not allowed
+                // Prevent deletion if user is not an admin
                 return Forbid();
             }
 
-            // delete the item from the database
+            // Delete the specified menu item from the database
             using (SqlConnection conn = new SqlConnection(AppHelper.GetDBConnectionString()))
             {
                 string cmdText = "DELETE FROM MenuItem WHERE MenuItemID = @MenuItemID";
@@ -94,14 +103,15 @@ namespace SmartCafe_Web.Pages.MenuItems
                 cmd.ExecuteNonQuery();
             }
 
+            // Refresh the list after deletion
             PopulateMenuItemList();
             return Page();
         }
 
-        // Add item to the cart
+        // Adds the selected menu item to the user's shopping cart
         public IActionResult OnGetAddToCart(int id)
         {
-            // Retrieve the MenuItem from the database
+            // Retrieve item details from the database
             var menuItem = new ItemView();
             using (SqlConnection conn = new SqlConnection(AppHelper.GetDBConnectionString()))
             {
@@ -116,6 +126,7 @@ namespace SmartCafe_Web.Pages.MenuItems
 
                 if (reader.Read())
                 {
+                    // Build menu item object
                     menuItem = new ItemView
                     {
                         MenuItemID = reader.GetInt32(0),
@@ -129,19 +140,19 @@ namespace SmartCafe_Web.Pages.MenuItems
                 }
             }
 
-            // Get current cart items from session
+            // Retrieve the cart from session storage
             var cartJson = HttpContext.Session.GetString("Cart");
             List<ItemView> cartItems = string.IsNullOrEmpty(cartJson)
                 ? new List<ItemView>()
                 : JsonSerializer.Deserialize<List<ItemView>>(cartJson);
 
-            // Add item to the cart
+            // Add the selected item to the cart
             cartItems.Add(menuItem);
 
-            // Save updated cart back to session
+            // Save the updated cart back to the session
             HttpContext.Session.SetString("Cart", JsonSerializer.Serialize(cartItems));
 
-            // Redirect to the Cart page
+            // Redirect to the cart page
             return RedirectToPage("/Cart");
         }
     }
